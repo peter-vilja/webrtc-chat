@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<head>
+  <link href="styles/main.css" rel="stylesheet" type="text/css" media="all">
+</head>
+<body>
+  <div id="main" role="main">
+    <video id="local-video" autoplay></video>
+    <video id="remote-video" autoplay></video>
+    <div class="controls">
+      <select id="video-select"></select>
+      <button id="start">Start</button>
+    </div>
+  </div>
+  <script src="scripts/vendor/adapter.js"></script>
+  <script src="scripts/vendor/traceur-runtime.js"></script>
+  <script src="scripts/vendor/es6-module-loader.js"></script>
+  <script src="https://cdn.socket.io/socket.io-1.1.0.js"></script>
+  <script src="scripts/main.js"></script>
+</body>
+</html>

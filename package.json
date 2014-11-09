@@ -1,0 +1,28 @@
+{
+  "name": "chat-app",
+  "version": "0.1.0",
+  "description": "a WebRTC chat",
+  "private": true,
+  "author": {
+    "name": "Peter Vilja",
+    "email": "peter.vilja@gmail.com"
+  },
+  "license": "MIT",
+  "engines": ">=0.10",
+  "dependencies": {
+    "es6-module-loader": "^0.9.2",
+    "traceur": "0.0.67",
+    "express": "^4.10.1",
+    "socket.io": "^1.2.0"
+  },
+  "devDependencies": {
+    "connect": "^2.26.5",
+    "connect-livereload": "^0.4.0",
+    "gulp": "^3.8.8",
+    "gulp-autoprefixer": "^1.0.1",
+    "gulp-clean": "^0.2.4",
+    "gulp-livereload": "^2.1.1",
+    "gulp-ruby-sass": "^0.7.1",
+    "serve-static": "^1.7.1"
+  }
+}
