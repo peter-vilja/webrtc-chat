@@ -2,6 +2,7 @@
 (function () {
   var socket = io('http://192.168.11.3:3000');
   var elementById = id => document.getElementById(id);
+  var videoChat = document.querySelector('.video-chat');
   var local = elementById('local-video');
   var remote = elementById('remote-video');
   var startButton = elementById('start');
@@ -14,7 +15,6 @@
   socket.on('offerAnswer', ({sdp}) =>  {
     connection.setRemoteDescription(new RTCSessionDescription(sdp));
     connection.createAnswer(gotDescription);
-    name = 'Patrik';
   });
 
   socket.on('iceCandidate', ({candidate}) => candidate && connection.addIceCandidate(new RTCIceCandidate(candidate)));
@@ -69,6 +69,7 @@
   var call = () => {
     createMessageChannel(connection);
     connection.createOffer(gotDescription);
+    videoChat.classList.add('started');
     name = 'Peter';
   };
 
@@ -104,7 +105,7 @@
   endButton.addEventListener('click', end, false);
   form.addEventListener('submit', event => {
     event.preventDefault();
-    let message = {time: new Date(), message: input.value, name: name};
+    let message = {time: new Date(), message: input.value, name: name || 'Patrik'};
     messages.send(JSON.stringify(message));
     showMessage({data: message});
     input.value = '';
