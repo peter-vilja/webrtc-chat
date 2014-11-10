@@ -3,19 +3,22 @@
   <link href="styles/main.css" rel="stylesheet" type="text/css" media="all">
 </head>
 <body>
-  <div id="main" role="main">
-    <video id="local-video" autoplay></video>
-    <video id="remote-video" autoplay></video>
-    <div class="controls">
-      <select id="video-select"></select>
-      <button id="start">Start</button>
-    </div>
-    <form id="message-form">
-      <input type="text" id="message-input">
-      <button type="submit">SEND</button>
-    </form>
-    <ul id="messages"></ul>
-  </div>
+  <section id="main" role="main">
+    <section class="video-chat">
+      <video id="remote-video" autoplay></video>
+      <video id="local-video" autoplay></video>
+      <div class="controls">
+        <select id="video-select"></select>
+        <button id="start">Start</button>
+      </div>
+    </section>
+    <aside class="message-chat">
+      <ul id="messages"></ul>
+      <form id="message-form">
+        <input type="text" id="message-input" placeholder="Type to chat">
+      </form>
+    </aside>
+  </section>
   <script src="scripts/vendor/adapter.js"></script>
   <script src="scripts/vendor/traceur-runtime.js"></script>
   <script src="scripts/vendor/es6-module-loader.js"></script>
