@@ -110,6 +110,7 @@
     messages.send(JSON.stringify(message));
     showMessage({data: message});
     input.value = '';
+    chat.scrollTop = chat.scrollHeight;
   });
 
 })();
