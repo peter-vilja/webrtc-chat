@@ -15,6 +15,7 @@
   socket.on('offerAnswer', ({sdp}) =>  {
     connection.setRemoteDescription(new RTCSessionDescription(sdp));
     connection.createAnswer(gotDescription);
+    videoChat.classList.add('started');
   });
 
   socket.on('iceCandidate', ({candidate}) => candidate && connection.addIceCandidate(new RTCIceCandidate(candidate)));
@@ -69,7 +70,6 @@
   var call = () => {
     createMessageChannel(connection);
     connection.createOffer(gotDescription);
-    videoChat.classList.add('started');
     name = 'Peter';
   };
 
@@ -94,6 +94,7 @@
     };
     let success = stream => {
       local.src = URL.createObjectURL(stream);
+      local.classList.add('streaming');
       connection.addStream(stream);
     };
     let failure = () => console.log('getUserMedia failed!');
