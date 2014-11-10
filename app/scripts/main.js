@@ -1,12 +1,14 @@
 'use strict';
 (function () {
   var socket = io('http://192.168.11.3:3000');
-  var local = document.getElementById('local-video');
-  var remote = document.getElementById('remote-video');
-  var startButton = document.getElementById('start');
-  var form = document.getElementById('message-form');
-  var input = document.getElementById('message-input');
-  var chat = document.getElementById('messages');
+  var elementById = (id) => document.getElementById(id);
+  var local = elementById('local-video');
+  var remote = elementById('remote-video');
+  var startButton = elementById('start');
+  var endButton = elementById('end');
+  var form = elementById('message-form');
+  var input = elementById('message-input');
+  var chat = elementById('messages');
   var connection, messages, name;
 
   socket.on('offerAnswer', ({sdp}) =>  {
@@ -70,6 +72,12 @@
     name = 'Peter';
   };
 
+  var end = () => {
+    local.pause();
+    remote.pause();
+    connection.close();
+  };
+
   var addVideoOption = (source, select) => {
     let fragment = document.createDocumentFragment();
     let option = document.createElement('option');
@@ -101,7 +109,7 @@
   };
 
   MediaStreamTrack.getSources(sources => {
-    let select = document.getElementById('video-select');
+    let select = elementById('video-select');
     sources.forEach(source => {
       if (source.kind == 'video') addVideoOption(source, select);
     });
@@ -109,6 +117,7 @@
   });
 
   startButton.addEventListener('click', call, false);
+  endButton.addEventListener('click', end, false);
   form.addEventListener('submit', (event) => {
     event.preventDefault();
     let message = {time: new Date(), message: input.value, name: name};
