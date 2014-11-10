@@ -34,6 +34,9 @@ section[role="main"] {
     border: 1px solid #ccc;
     width: 80%;
   }
+  button {
+    visibility: hidden;
+  }
 }
 
 .controls {
