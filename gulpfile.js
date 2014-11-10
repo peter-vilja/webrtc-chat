@@ -12,6 +12,7 @@ var app = 'app';
 
 gulp.task('scripts', function () {
   spawn('node_modules/traceur/traceur', ['--dir', 'app/scripts', '.tmp/scripts', '--modules=commonjs']);
+  spawn('node_modules/traceur/traceur', ['--dir', 'app/scripts', 'dist/scripts', '--modules=commonjs']);
 });
 
 gulp.task('copy', function () {
