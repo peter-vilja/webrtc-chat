@@ -22,11 +22,10 @@
   };
 
   var formatDate = (date) => {
-    let time = new Date(date);
-    let hours = time.getHours();
-    let minutes = time.getMinutes();
-    let seconds = time.getSeconds();
-    return `${hours}:${minutes}:${seconds}`;
+    typeof date === 'string' && (date = new Date(date));
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+    return `${hours}:${minutes}`;
   };
 
   var showMessage = (event) => {
@@ -34,10 +33,15 @@
     let li = document.createElement('li');
     let time = document.createElement('div');
     let message = document.createElement('div');
-    let data = JSON.parse(event.data);
+    let data = event.data;
+    typeof data === 'string' && (data = JSON.parse(data));
 
     time.appendChild(document.createTextNode(formatDate(data.time)));
+    time.addClass('time');
+
     message.appendChild(document.createTextNode(data.message));
+    message.addClass('message');
+
     li.appendChild(time);
     li.appendChild(message);
 
@@ -96,7 +100,9 @@
   startButton.addEventListener('click', call, false);
   form.addEventListener('submit', (event) => {
     event.preventDefault();
-    messages.send(JSON.stringify({time: new Date(), message: input.value}));
+    let message = {time: new Date(), message: input.value};
+    messages.send(JSON.stringify(message));
+    showMessage(message);
     input.value = '';
   });
 
