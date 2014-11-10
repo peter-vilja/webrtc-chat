@@ -4,6 +4,8 @@
 
 body {
   background: url('../images/whitey.png') repeat;
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-weight: 300;
 }
 
 html, body, section[role="main"] {
@@ -25,7 +27,7 @@ section[role="main"] {
   height: 100%;
   width: 100%;
   border-left: 1px solid #bbb;
-  background: #fafafa;
+  background: #fff;
   padding: 2em;
   box-shadow: 10px 0 20px rgba(0, 0, 0, 0.2) inset;
   position: relative;
@@ -36,13 +38,19 @@ section[role="main"] {
     padding: 0;
     li {
       padding: 0.5em 0;
-      border-bottom: 1px solid #ddd;
-      box-shadow: 0px 2px 0px #fff;
     }
-    .time {
+    header {
+      margin-bottom: 0.2em;
+    }
+    .name {
       font-weight: bold;
       font-size: 0.9em;
-      margin-bottom: 0.5em;
+      color: #666;
+      margin-right: 0.5em;
+    }
+    .time {
+      font-size: 0.8em;
+      color: #888;
     }
   }
   form {
