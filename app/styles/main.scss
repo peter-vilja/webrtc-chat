@@ -91,3 +91,32 @@ section[role="main"] {
   bottom: 3%;
   box-shadow: 0 0 35px rgba(0, 0, 0, 0.4);
 }
+
+@font-face {
+	font-family: 'chat';
+	src:url('fonts/chat.eot?-ddpcz0');
+	src:url('fonts/chat.eot?#iefix-ddpcz0') format('embedded-opentype'),
+		url('fonts/chat.woff?-ddpcz0') format('woff'),
+		url('fonts/chat.ttf?-ddpcz0') format('truetype'),
+		url('fonts/chat.svg?-ddpcz0#chat') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+	font-family: 'chat';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.icon-phone:before {
+	content: "\e600";
+}

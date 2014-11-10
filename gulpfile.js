@@ -15,7 +15,7 @@ gulp.task('scripts', function () {
   spawn('node_modules/traceur/traceur', ['--dir', 'app/scripts', 'dist/scripts', '--modules=commonjs']);
 });
 
-gulp.task('copy', ['images'], function () {
+gulp.task('copy', ['images', 'fonts'], function () {
   return gulp.src([
       'node_modules/traceur/bin/traceur-runtime.js',
       'node_modules/es6-module-loader/dist/es6-module-loader.js',
@@ -29,6 +29,12 @@ gulp.task('images', function () {
   return gulp.src(app + '/images/*')
     .pipe(gulp.dest('.tmp/images'))
     .pipe(gulp.dest('dist/images'));
+});
+
+gulp.task('fonts', function () {
+  return gulp.src(app + '/styles/fonts/*')
+    .pipe(gulp.dest('.tmp/styles/fonts'))
+    .pipe(gulp.dest('dist/styles/fonts'));
 });
 
 gulp.task('styles', function () {
