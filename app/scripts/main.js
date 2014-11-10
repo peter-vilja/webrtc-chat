@@ -1,7 +1,7 @@
 'use strict';
 (function () {
   var socket = io('http://192.168.11.3:3000');
-  var elementById = (id) => document.getElementById(id);
+  var elementById = id => document.getElementById(id);
   var local = elementById('local-video');
   var remote = elementById('remote-video');
   var startButton = elementById('start');
@@ -24,16 +24,16 @@
     socket.emit('offerAnswer', {'sdp': description});
   };
 
-  var formatDate = (date) => {
+  var formatDate = date => {
     typeof date === 'string' && (date = new Date(date));
-    let zero = (time) => time < 10 ? '0' + time : time;
+    let zero = time => time < 10 ? '0' + time : time;
     let hours = zero(date.getHours());
     let minutes = zero(date.getMinutes());
     return `${hours}:${minutes}`;
   };
 
-  var showMessage = (event) => {
-    let create = (element) => document.createElement(element);
+  var showMessage = event => {
+    let create = element => document.createElement(element);
     let fragment = document.createDocumentFragment();
     let li = create('li');
     let nameAndTime = create('header');
@@ -61,7 +61,7 @@
     chat.appendChild(fragment);
   };
 
-  var createMessageChannel = (connection) => {
+  var createMessageChannel = connection => {
     messages = connection.createDataChannel('Messages', {reliable: false});
     messages.onmessage = showMessage;
   };
@@ -78,16 +78,7 @@
     connection.close();
   };
 
-  var addVideoOption = (source, select) => {
-    let fragment = document.createDocumentFragment();
-    let option = document.createElement('option');
-    option.value = source.id;
-    option.text = source.label || 'camera';
-    fragment.appendChild(option);
-    select.appendChild(fragment);
-  }
-
-  var initialize = select => {
+  var initialize = () => {
     connection = new RTCPeerConnection({iceServers: [{url: 'stun:stun.l.google.com:19302'}]}, {optional: [{RtpDataChannels: true}]});
     connection.onicecandidate = ({candidate}) => socket.emit('iceCandidate', {'candidate': candidate});
     connection.onaddstream = ({stream}) => remote.src = URL.createObjectURL(stream);
@@ -98,7 +89,7 @@
 
     let constraints = {
       audio: false,
-      video: { optional: [{sourceId: select.value}] }
+      video: true
     };
     let success = stream => {
       local.src = URL.createObjectURL(stream);
@@ -108,17 +99,10 @@
     navigator.getUserMedia(constraints, success, failure);
   };
 
-  MediaStreamTrack.getSources(sources => {
-    let select = elementById('video-select');
-    sources.forEach(source => {
-      if (source.kind == 'video') addVideoOption(source, select);
-    });
-    initialize(select);
-  });
-
+  initialize();
   startButton.addEventListener('click', call, false);
   endButton.addEventListener('click', end, false);
-  form.addEventListener('submit', (event) => {
+  form.addEventListener('submit', event => {
     event.preventDefault();
     let message = {time: new Date(), message: input.value, name: name};
     messages.send(JSON.stringify(message));
