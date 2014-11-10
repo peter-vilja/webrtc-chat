@@ -21,10 +21,28 @@
     socket.emit('offerAnswer', {'sdp': description});
   };
 
+  var formatDate = (date) => {
+    let time = new Date(date);
+    let hours = time.getHours();
+    let minutes = time.getMinutes();
+    let seconds = time.getSeconds();
+    return `${hours}:${minutes}:${seconds}`;
+  };
+
   var showMessage = (event) => {
-    var li = document.createElement('li');
-    li.appendChild(document.createTextNode(event.data));
-    chat.appendChild(li);
+    let fragment = document.createDocumentFragment();
+    let li = document.createElement('li');
+    let time = document.createElement('div');
+    let message = document.createElement('div');
+    let data = JSON.parse(event.data);
+
+    time.appendChild(document.createTextNode(formatDate(data.time)));
+    message.appendChild(document.createTextNode(data.message));
+    li.appendChild(time);
+    li.appendChild(message);
+
+    fragment.appendChild(li);
+    chat.appendChild(fragment);
   };
 
   var createMessageChannel = (connection) => {
@@ -78,7 +96,7 @@
   startButton.addEventListener('click', call, false);
   form.addEventListener('submit', (event) => {
     event.preventDefault();
-    messages.send(input.value);
+    messages.send(JSON.stringify({time: new Date(), message: input.value}));
     input.value = '';
   });
 
