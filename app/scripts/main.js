@@ -7,11 +7,12 @@
   var form = document.getElementById('message-form');
   var input = document.getElementById('message-input');
   var chat = document.getElementById('messages');
-  var connection, messages, channel;
+  var connection, messages, name;
 
   socket.on('offerAnswer', ({sdp}) =>  {
     connection.setRemoteDescription(new RTCSessionDescription(sdp));
     connection.createAnswer(gotDescription);
+    name = 'Patrik';
   });
 
   socket.on('iceCandidate', ({candidate}) => candidate && connection.addIceCandidate(new RTCIceCandidate(candidate)));
@@ -30,20 +31,28 @@
   };
 
   var showMessage = (event) => {
+    let create = (element) => document.createElement(element);
     let fragment = document.createDocumentFragment();
-    let li = document.createElement('li');
-    let time = document.createElement('div');
-    let message = document.createElement('div');
+    let li = create('li');
+    let nameAndTime = create('header');
+    let message = create('div');
+    let time = create('span');
+    let user = create('span');
     let data = event.data;
     typeof data === 'string' && (data = JSON.parse(data));
 
+    user.appendChild(document.createTextNode(data.name));
+    user.classList.add('name');
     time.appendChild(document.createTextNode(formatDate(data.time)));
     time.classList.add('time');
+
+    nameAndTime.appendChild(user);
+    nameAndTime.appendChild(time);
 
     message.appendChild(document.createTextNode(data.message));
     message.classList.add('message');
 
-    li.appendChild(time);
+    li.appendChild(nameAndTime);
     li.appendChild(message);
 
     fragment.appendChild(li);
@@ -58,6 +67,7 @@
   var call = () => {
     createMessageChannel(connection);
     connection.createOffer(gotDescription);
+    name = 'Peter';
   };
 
   var addVideoOption = (source, select) => {
@@ -101,7 +111,7 @@
   startButton.addEventListener('click', call, false);
   form.addEventListener('submit', (event) => {
     event.preventDefault();
-    let message = {time: new Date(), message: input.value};
+    let message = {time: new Date(), message: input.value, name: name};
     messages.send(JSON.stringify(message));
     showMessage({data: message});
     input.value = '';
