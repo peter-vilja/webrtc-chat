@@ -41,7 +41,10 @@ section[role="main"] {
   box-shadow: 10px 0 20px rgba(0, 0, 0, 0.2) inset;
   position: relative;
   ul {
-    height: 90%;
+    max-height: 90%;
+    width: 100%;
+    bottom: 10%;
+    position: absolute;
     list-style: none;
     margin: 0;
     padding: 0;
