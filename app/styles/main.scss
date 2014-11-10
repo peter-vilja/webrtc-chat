@@ -80,6 +80,21 @@ section[role="main"] {
   left: 40%;
 }
 
+.phone {
+  padding: 0.7em;
+  font-size: 2.3em;
+  border-radius: 50%;
+  background: #00E200;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: none;
+}
+
+.phone.icon-phone-hang-up {
+  background: red;
+}
+
 #remote-video {
   width: 100%;
 }
