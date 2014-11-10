@@ -37,10 +37,10 @@
     typeof data === 'string' && (data = JSON.parse(data));
 
     time.appendChild(document.createTextNode(formatDate(data.time)));
-    time.addClass('time');
+    time.classList.add('time');
 
     message.appendChild(document.createTextNode(data.message));
-    message.addClass('message');
+    message.classList.add('message');
 
     li.appendChild(time);
     li.appendChild(message);
@@ -102,7 +102,7 @@
     event.preventDefault();
     let message = {time: new Date(), message: input.value};
     messages.send(JSON.stringify(message));
-    showMessage(message);
+    showMessage({data: message});
     input.value = '';
   });
 
