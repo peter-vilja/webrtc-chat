@@ -23,8 +23,9 @@
 
   var formatDate = (date) => {
     typeof date === 'string' && (date = new Date(date));
-    let hours = date.getHours();
-    let minutes = date.getMinutes();
+    let zero = (time) => time < 10 ? '0' + time : time;
+    let hours = zero(date.getHours());
+    let minutes = zero(date.getMinutes());
     return `${hours}:${minutes}`;
   };
 
