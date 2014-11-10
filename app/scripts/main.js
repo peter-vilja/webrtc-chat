@@ -5,7 +5,7 @@
   var remote = document.getElementById('remote-video');
   var startButton = document.getElementById('start');
   var form = document.getElementById('message-form');
-  var messageInput = document.getElementById('message-input');
+  var input = document.getElementById('message-input');
   var chat = document.getElementById('messages');
   var connection, messages, channel;
 
@@ -78,8 +78,8 @@
   startButton.addEventListener('click', call, false);
   form.addEventListener('submit', (event) => {
     event.preventDefault();
-    var value = messageInput.value;
-    messages.send(value);
+    messages.send(input.value);
+    input.value = '';
   });
 
 })();
