@@ -21,6 +21,15 @@ section[role="main"] {
 .video-chat {
   flex: 0 0 70%;
   position: relative;
+  &.started {
+    &:hover .icon-phone-hang-up {
+      opacity: 1;
+    }
+    .icon-phone {
+      display: none;
+      visibility: hidden;
+    }
+  }
 }
 
 .message-chat {
@@ -76,7 +85,7 @@ section[role="main"] {
 
 .controls {
   position: absolute;
-  top: 50%;
+  top: 40%;
   left: 40%;
 }
 
@@ -93,6 +102,11 @@ section[role="main"] {
 
 .phone.icon-phone-hang-up {
   background: red;
+  transition: opacity 1s ease-in-out;
+}
+
+.opacity-hidden {
+  opacity: 0;
 }
 
 #remote-video {
