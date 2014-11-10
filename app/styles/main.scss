@@ -42,15 +42,17 @@ section[role="main"] {
   position: relative;
   ul {
     max-height: 90%;
-    width: 100%;
+    left: 8%;
+    right: 8%;
     bottom: 10%;
     position: absolute;
     list-style: none;
     margin: 0;
     padding: 0;
     overflow: scroll;
-    li {
+    .message {
       padding: 0.5em 0;
+      word-wrap: break-word;
     }
     header {
       margin-bottom: 0.2em;
