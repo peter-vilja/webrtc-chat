@@ -1,3 +1,7 @@
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
 body {
   background: url('../images/whitey.png') repeat;
 }
@@ -18,21 +22,33 @@ section[role="main"] {
 }
 
 .message-chat {
-  border-left: 1px solid #bbb;
+  height: 100%;
   width: 100%;
+  border-left: 1px solid #bbb;
   background: #fafafa;
   padding: 2em;
-  box-shadow: -10px 0 53px rgba(#000, .2);
+  box-shadow: 10px 0 20px rgba(0, 0, 0, 0.2) inset;
   position: relative;
-  input {
+  ul {
+    height: 90%;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  form {
     position: absolute;
     bottom: 3%;
-    border-radius: 5px;
-    padding: 1em;
-    font-size: 0.8em;
-    box-shadow: none;
-    border: 1px solid #ccc;
-    width: 80%;
+    left: 5%;
+    right: 5%;
+    input {
+      position: relative;
+      width: 100%;
+      border-radius: 5px;
+      padding: 1em;
+      font-size: 0.8em;
+      box-shadow: none;
+      border: 1px solid #ccc;
+    }
   }
   button {
     visibility: hidden;
