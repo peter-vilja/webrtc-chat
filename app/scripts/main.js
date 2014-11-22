@@ -1,12 +1,13 @@
 'use strict';
 (function () {
-  var socket = io('http://192.168.11.3:3000');
+  var socket = io('https://localhost:3000');
   var elementById = id => document.getElementById(id);
   var videoChat = document.querySelector('.video-chat');
   var local = elementById('local-video');
   var remote = elementById('remote-video');
   var startButton = elementById('start');
   var endButton = elementById('end');
+  var shareScreenButton = elementById('share-screen');
   var form = elementById('message-form');
   var input = elementById('message-input');
   var chat = elementById('messages');
@@ -79,6 +80,25 @@
     connection.close();
   };
 
+  var success = stream => {
+    local.src = URL.createObjectURL(stream);
+    local.classList.add('streaming');
+    connection.addStream(stream);
+  };
+
+  var failure = (e) => console.log('getUserMedia failed!', e);
+
+  var share = () => {
+    navigator.getUserMedia({
+      audio: false,
+      video: {
+        mandatory: {
+          chromeMediaSource: 'screen'
+        }
+      }
+    }, success, failure);
+  };
+
   var initialize = () => {
     connection = new RTCPeerConnection({iceServers: [{url: 'stun:stun.l.google.com:19302'}]}, {optional: [{RtpDataChannels: true}]});
     connection.onicecandidate = ({candidate}) => socket.emit('iceCandidate', {'candidate': candidate});
@@ -92,12 +112,6 @@
       audio: false,
       video: true
     };
-    let success = stream => {
-      local.src = URL.createObjectURL(stream);
-      local.classList.add('streaming');
-      connection.addStream(stream);
-    };
-    let failure = () => console.log('getUserMedia failed!');
     navigator.getUserMedia(constraints, success, failure);
   };
 
@@ -112,5 +126,6 @@
     input.value = '';
     chat.scrollTop = chat.scrollHeight;
   });
+  shareScreenButton.addEventListener('click', share, false);
 
 })();
