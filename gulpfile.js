@@ -7,6 +7,7 @@ var clean = require('gulp-clean');
 var connect = require('connect');
 var livereload = require('gulp-livereload');
 var spawn = require('child_process').spawn;
+var fs = require('fs');
 
 var app = 'app';
 
@@ -59,9 +60,14 @@ gulp.task('clean', function () {
 gulp.task('connect', function () {
   var audioapp = connect()
     .use(require('connect-livereload')({ port: 35729 }))
-    .use(serveStatic('.tmp', app))
+    .use(serveStatic('.tmp', app));
 
-  require('http').createServer(audioapp)
+  var options = {
+    key: fs.readFileSync('./server.key'),
+    cert: fs.readFileSync('./server.crt')
+  };
+
+  require('https').createServer(options, audioapp)
     .listen(9000)
     .on('listening', function () {
       console.log('Started connect web server on http://localhost:9000');
