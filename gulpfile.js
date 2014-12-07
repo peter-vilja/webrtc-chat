@@ -20,7 +20,8 @@ gulp.task('copy', ['images', 'fonts'], function () {
   return gulp.src([
       'node_modules/traceur/bin/traceur-runtime.js',
       'node_modules/es6-module-loader/dist/es6-module-loader.js',
-      app + '/scripts/vendor/adapter.js'
+      app + '/scripts/vendor/adapter.js',
+      'node_modules/socket.io/lib/client.js'
     ])
     .pipe(gulp.dest('.tmp/scripts/vendor'))
     .pipe(gulp.dest('dist/scripts/vendor'));
