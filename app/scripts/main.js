@@ -1,6 +1,6 @@
 'use strict';
 (function () {
-  var socket = io('http://10.0.1.4:3000');
+  var socket = io('https://localhost:3000');
   var elementById = id => document.getElementById(id);
   var videoChat = document.querySelector('.video-chat');
   var local = elementById('local-video');
