@@ -1,6 +1,6 @@
 'use strict';
 (function () {
-  var socket = io('https://localhost:3000');
+  var socket = io('https://192.168.11.3:3000');
   var elementById = id => document.getElementById(id);
   var videoChat = document.querySelector('.video-chat');
   var local = elementById('local-video');
@@ -12,7 +12,7 @@
   var input = elementById('message-input');
   var chat = elementById('messages');
   var clients = {};
-  var messages, name, localStream;
+  var name, localStream;
 
   var setLocalDescription = (connection, description) => connection.setLocalDescription(description);
 
@@ -33,6 +33,10 @@
       videoChat.appendChild(video);
       video.src = URL.createObjectURL(stream);
       video.autoplay = true;
+    };
+    conn.ondatachannel = (event) => {
+      clients[from].messages = event.channel;
+      clients[from].messages.onmessage = showMessage(from);
     };
 
     conn.addStream(localStream);
@@ -72,6 +76,7 @@
     conn.addStream(localStream);
 
     clients[to] = {connection: conn};
+    clients[to].messages = createMessageChannel(conn, to);
     conn.createOffer(sendOffer(conn, to));
   });
 
@@ -83,38 +88,42 @@
     return `${hours}:${minutes}`;
   };
 
-  var showMessage = event => {
-    let create = element => document.createElement(element);
-    let fragment = document.createDocumentFragment();
-    let li = create('li');
-    let nameAndTime = create('header');
-    let message = create('div');
-    let time = create('span');
-    let user = create('span');
-    let data = event.data;
-    typeof data === 'string' && (data = JSON.parse(data));
+  var showMessage = from => {
+    return event => {
+      let create = element => document.createElement(element);
+      let fragment = document.createDocumentFragment();
+      let li = create('li');
+      let nameAndTime = create('header');
+      let message = create('div');
+      let time = create('span');
+      let user = create('span');
+      let data = event.data;
+      typeof data === 'string' && (data = JSON.parse(data));
 
-    user.appendChild(document.createTextNode(data.name));
-    user.classList.add('name');
-    time.appendChild(document.createTextNode(formatDate(data.time)));
-    time.classList.add('time');
+      user.appendChild(document.createTextNode(from));
+      user.classList.add('name');
+      time.appendChild(document.createTextNode(formatDate(data.time)));
+      time.classList.add('time');
 
-    nameAndTime.appendChild(user);
-    nameAndTime.appendChild(time);
+      nameAndTime.appendChild(user);
+      nameAndTime.appendChild(time);
 
-    message.appendChild(document.createTextNode(data.message));
-    message.classList.add('message');
+      message.appendChild(document.createTextNode(data.message));
+      message.classList.add('message');
 
-    li.appendChild(nameAndTime);
-    li.appendChild(message);
+      li.appendChild(nameAndTime);
+      li.appendChild(message);
 
-    fragment.appendChild(li);
-    chat.appendChild(fragment);
+      fragment.appendChild(li);
+      chat.appendChild(fragment);
+    };
   };
 
-  var createMessageChannel = connection => {
-    messages = connection.createDataChannel('Messages', {reliable: false});
-    messages.onmessage = showMessage;
+  var createMessageChannel = (connection, from) => {
+    console.log('createMessageChannel');
+    var messages = connection.createDataChannel('Messages', {reliable: false});
+    messages.onmessage = showMessage(from);
+    return messages;
   };
 
   var sendOffer = (connection, client) => {
@@ -141,10 +150,9 @@
         conn.addStream(localStream);
 
         clients[client] = {connection: conn};
+        clients[client].messages = createMessageChannel(conn, client);
         conn.createOffer(sendOffer(conn, client));
       });
-      // createMessageChannel(connection);
-      name = 'Peter';
     });
   };
 
@@ -186,9 +194,11 @@
   endButton.addEventListener('click', end, false);
   form.addEventListener('submit', event => {
     event.preventDefault();
-    let message = {time: new Date(), message: input.value, name: name || 'Patrik'};
-    messages.send(JSON.stringify(message));
-    showMessage({data: message});
+    let message = {time: new Date(), message: input.value};
+
+    Object.keys(clients).forEach(key => clients[key].messages.send(JSON.stringify(message)));
+
+    showMessage('me')({data: message});
     input.value = '';
     chat.scrollTop = chat.scrollHeight;
   });
