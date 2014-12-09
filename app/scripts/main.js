@@ -4,7 +4,6 @@
   var elementById = id => document.getElementById(id);
   var videoChat = document.querySelector('.video-chat');
   var local = elementById('local-video');
-  var remote = elementById('remote-video');
   var startButton = elementById('start');
   var endButton = elementById('end');
   var shareScreenButton = elementById('share-screen');
@@ -158,7 +157,6 @@
 
   var end = () => {
     local.pause();
-    remote.pause();
     connection.close();
   };
 
