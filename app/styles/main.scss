@@ -89,6 +89,11 @@ section[role="main"] {
   }
 }
 
+#share-screen {
+  z-index: 999;
+  position: relative;
+}
+
 .controls {
   position: absolute;
   top: 40%;
