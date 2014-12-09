@@ -28,7 +28,7 @@ io.on('connection', function (socket) {
   var clients = io.engine.clients;
   var ids = R.compose(R.filter(others(id)), R.keys);
   calls = R.mapObj(add(id), calls);
-  calls[id] = {active: [], inactive: ids(clients)};
+  calls[id] = {inactive: ids(clients)};
   console.log(calls);
 
   socket.on('inactive', function (fn) {

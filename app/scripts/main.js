@@ -1,6 +1,6 @@
 'use strict';
 (function () {
-  var socket = io('https://192.168.11.3:3000');
+  var socket = io('https://10.100.60.147:3000');
   var elementById = id => document.getElementById(id);
   var videoChat = document.querySelector('.video-chat');
   var local = elementById('local-video');
@@ -25,25 +25,32 @@
 
   socket.on('offer', ({from, sdp}) => {
     console.log('offer from', from);
-    let conn = createConnection();
-    conn.onicecandidate = ({candidate}) => socket.emit('iceCandidate', {'to': from, 'candidate': candidate});
-    conn.onaddstream = ({stream}) => {
-      let video = document.createElement('video');
-      videoChat.appendChild(video);
-      video.src = URL.createObjectURL(stream);
-      video.autoplay = true;
-    };
-    conn.ondatachannel = (event) => {
-      clients[from].messages = event.channel;
-      clients[from].messages.onmessage = showMessage(from);
-    };
+    var client = clients[from]
+    if (client) {
+      var c = client.connection;
+      c.setRemoteDescription(new RTCSessionDescription(sdp));
+      c.createAnswer(sendAnswer(c, from));
+    } else {
+      let conn = createConnection();
+      conn.onicecandidate = ({candidate}) => socket.emit('iceCandidate', {'to': from, 'candidate': candidate});
+      conn.onaddstream = ({stream}) => {
+        let video = document.createElement('video');
+        videoChat.appendChild(video);
+        video.src = URL.createObjectURL(stream);
+        video.autoplay = true;
+      };
+      conn.ondatachannel = (event) => {
+        clients[from].messages = event.channel;
+        clients[from].messages.onmessage = showMessage(from);
+      };
 
-    conn.addStream(localStream);
+      conn.addStream(localStream);
 
-    clients[from] = {connection: conn};
-    conn.setRemoteDescription(new RTCSessionDescription(sdp));
-    conn.createAnswer(sendAnswer(conn, from));
-    videoChat.classList.add('started');
+      clients[from] = {connection: conn};
+      conn.setRemoteDescription(new RTCSessionDescription(sdp));
+      conn.createAnswer(sendAnswer(conn, from));
+      videoChat.classList.add('started');
+    }
   });
 
   socket.on('answer', ({from, sdp}) => {
@@ -127,6 +134,7 @@
 
   var sendOffer = (connection, client) => {
     return description => {
+      console.log('sending offer');
       setLocalDescription(connection, description);
       socket.emit('offer', {'to': client, 'sdp': description});
     };
@@ -166,6 +174,20 @@
     localStream = stream;
   };
 
+  var succ = stream => {
+    local.src = URL.createObjectURL(stream);
+    local.classList.add('streaming');
+    Object.keys(clients).forEach(key => {
+      var conn = clients[key].connection;
+      var streams = conn.getLocalStreams();
+      streams.forEach(stream => {
+        conn.removeStream(stream);
+      });
+      conn.addStream(stream);
+      conn.createOffer(sendOffer(conn, key));
+    });
+  };
+
   var failure = (e) => console.log('getUserMedia failed!', e);
 
   var share = () => {
@@ -176,7 +198,7 @@
           chromeMediaSource: 'screen'
         }
       }
-    }, success, failure);
+    }, succ, failure);
   };
 
   var initialize = () => {
